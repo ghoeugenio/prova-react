@@ -3,8 +3,8 @@ import {useHistory} from "react-router-dom";
 import ButtonActions from "../../../components/ButtonActions";
 import Modal from "../../../components/Modal";
 import {useAppDispatch, useAppSelector} from "../../../hooks/hooks";
-import {loginActions} from "../../../store/login";
-import {currentUserActions} from "../../../store/currentUser";
+import {loginActions} from "../../../store/Redux/login";
+import {currentUserActions} from "../../../store/Redux/currentUser";
 import {Container, Title, BoxForm, Input, ForgotButton} from "../styles";
 import IButton from "../../../interfaces/button";
 import IUserRegister from "../../../interfaces/users";
@@ -13,6 +13,7 @@ const propsButton: IButton = {
 	iconSize: "1.5rem",
 	fontSize: "2rem",
 	fontColor: "#707070",
+	widthButton: "22rem",
 };
 
 const LoginAccount: React.FC = () => {
@@ -109,6 +110,7 @@ const LoginAccount: React.FC = () => {
 					iconSize={propsButton.iconSize}
 					fontSize={propsButton.fontSize}
 					fontColor={propsButton.fontColor}
+					widthButton={propsButton.widthButton}
 					side={false}
 					onClick={submitHandler}
 				>
@@ -119,6 +121,7 @@ const LoginAccount: React.FC = () => {
 				iconSize={propsButton.iconSize}
 				fontSize={propsButton.fontSize}
 				fontColor={propsButton.fontColor}
+				widthButton={"22rem"}
 				side={false}
 				onClick={registerHandler}
 			>

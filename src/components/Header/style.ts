@@ -13,6 +13,10 @@ export const Container = styled.header`
 			width: 20rem;
 		}
 	}
+
+	@media (max-width: 600px) {
+		margin-left: -5rem;
+	}
 `;
 
 export const Logo = styled.button`
@@ -27,6 +31,9 @@ export const Logo = styled.button`
 
 	margin-left: 0rem;
 	margin-top: 1rem;
+	@media (max-width: 600px) {
+		margin-left: 1rem;
+	}
 `;
 
 export const DrawerHeader = styled.div`
@@ -67,6 +74,9 @@ export const SelScreen = styled.button`
 		opacity: 0.7;
 		transition: all 250ms linear;
 	}
+	@media (max-width: 600px) {
+		padding-left: 0rem;
+	}
 `;
 
 export const IconRightHeader = styled(East)`
@@ -84,4 +94,8 @@ export const EmptyGames = styled.div`
 	border: none;
 	background-color: transparent;
 	cursor: default;
+`;
+
+export const AccountEdit = styled.div`
+	display: flex;
 `;

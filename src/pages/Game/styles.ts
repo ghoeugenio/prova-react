@@ -8,6 +8,9 @@ interface IPropsLabel {
 export const Container = styled.div`
 	height: 100vh;
 	display: flex;
+	@media (max-width: 810px) {
+		display: block;
+	}
 `;
 
 export const DrawerBet = styled.div`
@@ -36,9 +39,14 @@ export const BlockTitle = styled.div`
 export const BlockListButtons = styled.ul`
 	display: flex;
 	list-style-type: none;
+	@media (max-width: 900px) {
+		display: block;
+	}
 `;
 
-export const ItemListButtons = styled.li``;
+export const ItemListButtons = styled.li`
+	height: 3rem;
+`;
 
 export const TitleButton = styled.p`
 	text-align: left;
@@ -117,6 +125,9 @@ export const ButtonsGame = styled.div`
 			opacity: 0.7;
 			transition: all 250ms linear;
 		}
+		@media (max-width: 600px) {
+			width: 7rem;
+		}
 	}
 `;
 
@@ -137,6 +148,9 @@ export const ButtonAddToCart = styled.div`
 		&:hover {
 			opacity: 0.7;
 			transition: all 250ms linear;
+		}
+		@media (max-width: 600px) {
+			width: 9rem;
 		}
 	}
 `;

@@ -1,8 +1,8 @@
 import {BrowserRouter, Switch, Route} from "react-router-dom";
 
-import Login from "./screens/Login";
-import Game from "./screens/Game";
-import Home from "./screens/Home";
+import Login from "./pages/Login";
+import Game from "./pages/Game";
+import Home from "./pages/Home";
 
 export default function Routes() {
 	return (

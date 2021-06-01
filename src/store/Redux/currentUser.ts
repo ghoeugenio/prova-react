@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import IUserRegister from "../interfaces/users";
+import IUserRegister from "../../interfaces/users";
 
 interface CurrentUser {
 	currentUser: IUserRegister;

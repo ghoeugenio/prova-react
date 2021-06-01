@@ -28,6 +28,7 @@ const propsButton: IButton = {
 	iconSize: "1.25rem",
 	fontSize: "1.25rem",
 	fontColor: "#B5C401",
+	widthButton: "11rem",
 };
 
 const Home: React.FunctionComponent<IRoute> = () => {
@@ -89,7 +90,7 @@ const Home: React.FunctionComponent<IRoute> = () => {
 										setSelectedButton(item)
 									}
 								>
-									{item.type}
+									{item.type.replace(/[-]/g, "")}
 								</ButtonSelect>
 							</ItemListButtons>
 						))}
@@ -100,6 +101,7 @@ const Home: React.FunctionComponent<IRoute> = () => {
 						iconSize={propsButton.iconSize}
 						fontSize={propsButton.fontSize}
 						fontColor={propsButton.fontColor}
+						widthButton={propsButton.widthButton}
 						side={false}
 						onClick={newBetHandler}
 					>

@@ -3,6 +3,13 @@ interface IPropsLogin {
 	isError: boolean;
 }
 
+export const ContainerMain = styled.div`
+	display: flex;
+	@media (max-width: 800px) {
+		display: block;
+	}
+`;
+
 export const Main = styled.div`
 	text-align: center;
 	color: #707070;
@@ -35,28 +42,36 @@ export const MainTitle = styled.button`
 export const FooterTitle = styled.p`
 	margin-top: -0.2rem;
 	font-size: 5.2rem;
+	text-align: center;
+`;
+
+export const Background = styled.div`
+	width: 22rem;
 `;
 
 //modular components
 
 export const Container = styled.div`
-	position: fixed;
-	margin-left: 43rem;
+	margin-left: 20rem;
 	text-align: center;
 	margin-top: -2rem;
 
 	@media (max-width: 1050px) {
-		margin-left: 35rem;
+		margin-left: 10rem;
 	}
 
 	@media (max-width: 900px) {
-		margin-left: 26rem;
+		margin-left: 5rem;
+	}
+	@media (max-width: 700px) {
+		margin-left: 2rem;
 	}
 `;
 
 export const Title = styled.p`
 	font-size: 2.25rem;
 	color: #707070;
+	width: 22rem;
 `;
 
 export const BoxForm = styled.div`

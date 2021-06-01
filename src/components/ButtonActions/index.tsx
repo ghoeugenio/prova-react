@@ -11,6 +11,7 @@ const ButtonActions: React.FunctionComponent<IButton> = ({
 	iconSize,
 	onClick,
 	side,
+	widthButton,
 }) => {
 	return (
 		<ActionButton
@@ -18,6 +19,7 @@ const ButtonActions: React.FunctionComponent<IButton> = ({
 			fontColor={fontColor}
 			fontSize={fontSize}
 			onClick={onClick}
+			widthButton={widthButton}
 		>
 			{side && <IconLeft iconSize={iconSize} />}
 			{children}

@@ -1,8 +1,15 @@
-import React, {Fragment, useEffect} from "react";
+import React, {useEffect} from "react";
 import {useAppSelector, useAppDispatch} from "../../hooks/hooks";
-import {gameActions} from "../../store/game";
+import {gameActions} from "../../store/Redux/game";
 import api from "../../api";
-import {Main, HeaderTitle, MainTitle, FooterTitle} from "./styles";
+import {
+	ContainerMain,
+	Main,
+	Background,
+	HeaderTitle,
+	MainTitle,
+	FooterTitle,
+} from "./styles";
 import IRoute from "../../interfaces/route";
 
 import LoginAccount from "./componentsLogin/LoginAccount";
@@ -22,15 +29,7 @@ const Login: React.FunctionComponent<IRoute> = () => {
 	}, [dispatchGame]);
 
 	return (
-		<Fragment>
-			{loginScreen === "login" ? (
-				<LoginAccount />
-			) : loginScreen === "forget" ? (
-				<ForgetAccount />
-			) : (
-				<RegisterAccount />
-			)}
-
+		<ContainerMain>
 			<Main>
 				<HeaderTitle>
 					The
@@ -40,7 +39,16 @@ const Login: React.FunctionComponent<IRoute> = () => {
 				<MainTitle>for</MainTitle>
 				<FooterTitle>LOTTERY</FooterTitle>
 			</Main>
-		</Fragment>
+			<Background>
+				{loginScreen === "login" ? (
+					<LoginAccount />
+				) : loginScreen === "forget" ? (
+					<ForgetAccount />
+				) : (
+					<RegisterAccount />
+				)}
+			</Background>
+		</ContainerMain>
 	);
 };
 

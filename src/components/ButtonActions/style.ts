@@ -7,7 +7,7 @@ export const ActionButton = styled.button<IButton>`
 	cursor: pointer;
 	background-color: transparent;
 
-	width: 11rem;
+	width: ${(props: IButton) => props.widthButton};
 	margin-top: 2rem;
 
 	font-size: ${(props: IButton) => props.fontSize};

@@ -67,6 +67,7 @@ export const Type = styled.p<ISelectNumbers>`
 `;
 
 export const DatePrice = styled.div`
+	padding-top: 0.5rem;
 	margin-left: 0.7rem;
 	display: flex;
 	p {

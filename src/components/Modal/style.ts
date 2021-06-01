@@ -46,7 +46,7 @@ export const ModalUI = styled.div`
 
 export const ModalAccount = styled.div`
 	position: fixed;
-	width: 50%;
+	width: 40%;
 	height: 100vh;
 	left: 23%;
 	background-color: white;
@@ -73,5 +73,13 @@ export const ModalAccount = styled.div`
 		border: none;
 		border-radius: 2rem;
 		color: #fff;
+		cursor: pointer;
+		&:hover {
+			opacity: 0.7;
+			transition: all 250ms linear;
+		}
+	}
+	@media (max-width: 800px) {
+		width: 50%;
 	}
 `;

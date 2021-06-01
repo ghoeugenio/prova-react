@@ -4,5 +4,6 @@ export default interface IButton {
 	fontSize: string;
 	iconSize: string;
 	onClick?: Function;
+	widthButton: string;
 	side?: boolean;
 }

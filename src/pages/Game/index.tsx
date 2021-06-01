@@ -32,41 +32,15 @@ import IData from "../../interfaces/data";
 import ISelectNumbers from "../../interfaces/selectNumbers";
 import IUserRegister from "../../interfaces/users";
 import {useAppSelector, useAppDispatch} from "../../hooks/hooks";
-import {usersActions} from "../../store/users";
-import {currentUserActions} from "../../store/currentUser";
+import {usersActions} from "../../store/Redux/users";
+import {currentUserActions} from "../../store/Redux/currentUser";
+import cartReducer from "../../store/Reducer/cartReducer";
 
 interface INumbers {
 	selected: boolean;
 	value: number;
 	text: string;
 }
-
-type ICartState = {
-	content: Array<ISelectNumbers>;
-};
-
-type ICartActions = {
-	type: "ADD_GAME" | "REMOVE_GAME" | "CLEAR_GAME";
-	payload?: ISelectNumbers | number;
-};
-
-const cartReducer = (state: ICartState, action: ICartActions): any => {
-	switch (action.type) {
-		case "ADD_GAME":
-			return {content: [...state.content, action.payload]};
-		case "REMOVE_GAME": {
-			return {
-				content: state.content.filter((item, index) => {
-					return index !== action.payload && item;
-				}),
-			};
-		}
-		case "CLEAR_GAME":
-			return {content: []};
-		default:
-			return state.content;
-	}
-};
 
 const Game: React.FunctionComponent<IRoute> = () => {
 	const gameData = useAppSelector((state) => state.game.game);
@@ -204,6 +178,11 @@ const Game: React.FunctionComponent<IRoute> = () => {
 			setModal(true);
 			return;
 		}
+		if (priceCart <= 30) {
+			setModalProps("Só é possivel fazer jogos acima de R$30!");
+			setModal(true);
+			return;
+		}
 		dispatchRedux(
 			usersActions.setNewGame({
 				data: cartState.content,
@@ -269,7 +248,7 @@ const Game: React.FunctionComponent<IRoute> = () => {
 										setSelectedButton(item)
 									}
 								>
-									{item.type}
+									{item.type.replace(/[-]/g, "")}
 								</ButtonSelect>
 							</ItemListButtons>
 						))}

@@ -3,7 +3,7 @@ import React, {useState, useCallback} from "react";
 import ButtonActions from "../../../components/ButtonActions";
 import Modal from "../../../components/Modal";
 import {useAppDispatch, useAppSelector} from "../../../hooks/hooks";
-import {loginActions} from "../../../store/login";
+import {loginActions} from "../../../store/Redux/login";
 import IButton from "../../../interfaces/button";
 import IUserRegister from "../../../interfaces/users";
 
@@ -13,6 +13,7 @@ const propsButton: IButton = {
 	iconSize: "1.5rem",
 	fontSize: "2rem",
 	fontColor: "#707070",
+	widthButton: "22rem",
 };
 
 const ForgetAccount: React.FC = () => {
@@ -88,6 +89,7 @@ const ForgetAccount: React.FC = () => {
 					iconSize={propsButton.iconSize}
 					fontSize={propsButton.fontSize}
 					fontColor={propsButton.fontColor}
+					widthButton={propsButton.widthButton}
 					side={false}
 					onClick={sendLinkHandler}
 				>
@@ -98,6 +100,7 @@ const ForgetAccount: React.FC = () => {
 				iconSize={propsButton.iconSize}
 				fontSize={propsButton.fontSize}
 				fontColor={propsButton.fontColor}
+				widthButton={propsButton.widthButton}
 				side={true}
 				onClick={backHandler}
 			>

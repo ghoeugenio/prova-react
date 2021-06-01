@@ -10,6 +10,9 @@ export const Drawer = styled.div`
 	@media (max-width: 949px) {
 		margin-left: -5rem;
 	}
+	@media (max-width: 700px) {
+		margin-left: 0rem;
+	}
 `;
 export const BlockDrawer = styled.div`
 	width: 90rem;
@@ -19,6 +22,9 @@ export const BlockDrawer = styled.div`
 		width: 10rem;
 		margin-left: 0rem;
 		margin-right: 3.5rem;
+	}
+	@media (max-width: 700px) {
+		display: block;
 	}
 `;
 
@@ -44,9 +50,14 @@ export const ListButtons = styled.ul`
 	justify-content: space-between;
 	margin-top: 2rem;
 	margin-left: -5rem;
+	@media (max-width: 949px) {
+		display: block;
+	}
 `;
 
-export const ItemListButtons = styled.li``;
+export const ItemListButtons = styled.li`
+	height: 3rem;
+`;
 
 export const TitleButton = styled.p`
 	color: #868686;

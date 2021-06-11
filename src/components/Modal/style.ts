@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const BackdropUI = styled.div`
 	position: fixed;
@@ -36,6 +36,12 @@ export const ModalUI = styled.div`
 		border: none;
 		border-radius: 2rem;
 		color: #fff;
+		cursor: pointer;
+	}
+
+	img {
+		width: 3rem;
+		height: 2rem;
 	}
 
 	@media (min-width: 768px) {

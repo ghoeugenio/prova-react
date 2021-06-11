@@ -1,12 +1,12 @@
-import React, {Fragment, ReactElement} from "react";
-import ReactDOM from "react-dom";
+import React, {Fragment, ReactElement} from 'react';
+import ReactDOM from 'react-dom';
 
-import {BackdropUI, ModalUI, ModalAccount} from "./style";
+import {BackdropUI, ModalUI, ModalAccount} from './style';
 
 interface IModal {
 	children?: React.ReactNode;
-	onClose?: Function;
-	typeModal?: boolean;
+	onClose?: Function | undefined;
+	typeModal?: boolean | undefined;
 }
 
 const Backdrop: React.FunctionComponent<IModal> = ({onClose}): ReactElement => {
@@ -17,7 +17,6 @@ const ModalOverlay: React.FunctionComponent<IModal> = ({
 	children,
 	typeModal,
 }) => {
-	console.log(typeModal);
 	if (typeModal) {
 		return (
 			<ModalAccount>
@@ -33,7 +32,7 @@ const ModalOverlay: React.FunctionComponent<IModal> = ({
 	}
 };
 
-const portalElement: any = document.getElementById("overlays");
+const portalElement: any = document.getElementById('overlays');
 
 const Modal: React.FunctionComponent<IModal> = ({
 	children,

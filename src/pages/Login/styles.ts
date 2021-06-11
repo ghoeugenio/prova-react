@@ -1,10 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 interface IPropsLogin {
 	isError: boolean;
 }
 
 export const ContainerMain = styled.div`
 	display: flex;
+	margin-top: 5rem;
 	@media (max-width: 800px) {
 		display: block;
 	}
@@ -14,7 +15,7 @@ export const Main = styled.div`
 	text-align: center;
 	color: #707070;
 	width: 30%;
-	font-family: "Robotao";
+	font-family: 'Robotao';
 	margin-left: 5rem;
 	cursor: default;
 	@media (max-width: 800px) {
@@ -54,7 +55,7 @@ export const Background = styled.div`
 export const Container = styled.div`
 	margin-left: 20rem;
 	text-align: center;
-	margin-top: -2rem;
+	padding-top: 5rem;
 
 	@media (max-width: 1050px) {
 		margin-left: 10rem;
@@ -99,7 +100,7 @@ export const Input = styled.input<IPropsLogin>`
 	opacity: 1;
 	border: none;
 	border-bottom: 2px solid
-		${(props: IPropsLogin) => (props.isError ? "#ff6961" : "#ebebeb")};
+		${(props: IPropsLogin) => (props.isError ? '#ff6961' : '#ebebeb')};
 
 	color: #9d9d9d;
 	font: 1rem;
@@ -118,7 +119,7 @@ export const ForgotButton = styled.button`
 	cursor: pointer;
 	background-color: transparent;
 
-	font-family: "Roboto Regular";
+	font-family: 'Roboto Regular';
 
 	margin-top: 1.5rem;
 	margin-left: 7rem;

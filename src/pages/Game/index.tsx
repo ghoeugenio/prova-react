@@ -1,5 +1,5 @@
-import React, {useState, useEffect, Fragment, useReducer} from "react";
-import {useHistory} from "react-router-dom";
+import React, {useState, useEffect, Fragment, useReducer} from 'react';
+import {useHistory} from 'react-router-dom';
 import {
 	Container,
 	DrawerBet,
@@ -22,19 +22,20 @@ import {
 	CartUI,
 	ButtonSave,
 	EmptyCart,
-} from "./styles";
-import Header from "../../components/Header";
-import ButtonSelect from "../../components/ButtonSelect";
-import GameMade from "../../components/GameMade";
-import Modal from "../../components/Modal";
-import IRoute from "../../interfaces/route";
-import IData from "../../interfaces/data";
-import ISelectNumbers from "../../interfaces/selectNumbers";
-import IUserRegister from "../../interfaces/users";
-import {useAppSelector, useAppDispatch} from "../../hooks/hooks";
-import {usersActions} from "../../store/Redux/users";
-import {currentUserActions} from "../../store/Redux/currentUser";
-import cartReducer from "../../store/Reducer/cartReducer";
+} from './styles';
+import Header from '../../components/Header';
+import ButtonSelect from '../../components/ButtonSelect';
+import GameMade from '../../components/GameMade';
+import Modal from '../../components/Modal';
+import IRoute from '../../interfaces/route';
+import IData from '../../interfaces/data';
+import ISelectNumbers from '../../interfaces/selectNumbers';
+import IUser from '../../interfaces/users';
+import {useAppSelector, useAppDispatch} from '../../hooks/hooks';
+import {gameActions} from '../../store/Redux/game';
+import cartReducer from '../../store/Reducer/cartReducer';
+import api from '../../services/api';
+import loading from '../../assets/loading.gif';
 
 interface INumbers {
 	selected: boolean;
@@ -43,19 +44,18 @@ interface INumbers {
 }
 
 const Game: React.FunctionComponent<IRoute> = () => {
-	const gameData = useAppSelector((state) => state.game.game);
-	const currentUser: IUserRegister = useAppSelector(
+	const gameData: any = useAppSelector((state) => state.game.game);
+	const currentUser: IUser = useAppSelector(
 		(state) => state.currentUser.currentUser
 	);
-	const dispatchRedux = useAppDispatch();
-
+	const dispatchGame = useAppDispatch();
 	const [selectedGame, setSelectedButton] = useState<IData>(gameData[0]);
 	const [listNumbers, setListNumbers] = useState<Array<INumbers>>([]);
 	const [markNumbers, setMarkNumbers] = useState<number>(0);
 	const [priceCart, setPriceCart] = useState<number>(0);
 	const [modal, setModal] = useState<boolean>(false);
-	const [modalProps, setModalProps] = useState<string>("");
-	const date: Date = new Date();
+	const [modalProps, setModalProps] = useState<string>('');
+	const token = 'Bearer ' + localStorage.getItem('token');
 
 	const initialReducer = {
 		content: [],
@@ -66,23 +66,37 @@ const Game: React.FunctionComponent<IRoute> = () => {
 	const history = useHistory();
 
 	useEffect(() => {
-		if (!selectedGame) {
-			history.push("/home");
-		}
 		var array = [];
 		for (var i = 0; i < selectedGame?.range; i++) {
 			array.push({
 				selected: false,
 				value: i + 1,
-				text: i < 9 ? "0" + (i + 1) : (i + 1).toString(),
+				text: i < 9 ? '0' + (i + 1) : (i + 1).toString(),
 			});
 		}
 		setListNumbers(array);
 		setMarkNumbers(0);
-	}, [selectedGame, history]);
+	}, [selectedGame]);
+
+	useEffect(() => {
+		!localStorage.getItem('token') && history.push('/');
+		if (currentUser.id === 0) {
+			history.push('/');
+			localStorage.clear();
+		}
+		if (gameData.length < 1) {
+			api.get('/game')
+				.then((response) => {
+					dispatchGame(gameActions.setGame(response.data));
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		}
+	}, [history, token, currentUser, gameData, dispatchGame]);
 
 	const onClickHeaderHandler = () => {
-		history.push("/home");
+		history.push('/home');
 		setMarkNumbers(0);
 	};
 
@@ -92,7 +106,7 @@ const Game: React.FunctionComponent<IRoute> = () => {
 			setMarkNumbers(markNumbers - 1);
 			return;
 		}
-		if (!number.selected && markNumbers >= selectedGame["max-number"]) {
+		if (!number.selected && markNumbers >= selectedGame['max-number']) {
 			return;
 		}
 		number.selected = true;
@@ -103,11 +117,11 @@ const Game: React.FunctionComponent<IRoute> = () => {
 		var valueAleatory: number = 0;
 		var currentValueSelect: number = markNumbers;
 		var auxItems: Array<INumbers> = [...listNumbers];
-		if (currentValueSelect === selectedGame["max-number"]) {
-			setModalProps("A cartela já está completa!");
+		if (currentValueSelect === selectedGame['max-number']) {
+			setModalProps('A cartela já está completa!');
 			setModal(true);
 		}
-		while (currentValueSelect < selectedGame["max-number"]) {
+		while (currentValueSelect < selectedGame['max-number']) {
 			valueAleatory = Math.ceil(Math.random() * selectedGame.range);
 			if (!auxItems[valueAleatory - 1].selected) {
 				auxItems[valueAleatory - 1].selected = true;
@@ -123,7 +137,7 @@ const Game: React.FunctionComponent<IRoute> = () => {
 		var auxItems: Array<INumbers> = [...listNumbers];
 		var index: number = 0;
 		if (currentValueSelect === 0) {
-			setModalProps("Nenhum número selecionado!");
+			setModalProps('Nenhum número selecionado!');
 			setModal(true);
 			return;
 		}
@@ -139,8 +153,8 @@ const Game: React.FunctionComponent<IRoute> = () => {
 		var auxCart: Array<string> = [];
 		var index: number = 0;
 		var currentValueSelect: number = markNumbers;
-		if (currentValueSelect !== selectedGame["max-number"]) {
-			setModalProps("Selecione a quantidade indicada de números!");
+		if (currentValueSelect !== selectedGame['max-number']) {
+			setModalProps('Selecione a quantidade indicada de números!');
 			setModal(true);
 			return;
 		}
@@ -152,73 +166,94 @@ const Game: React.FunctionComponent<IRoute> = () => {
 		}
 		clearGameHandler();
 		dispatchCart({
-			type: "ADD_GAME",
+			type: 'ADD_GAME',
 			payload: {
+				game_id: selectedGame.id,
 				type: selectedGame.type,
 				price: selectedGame.price,
-				color: selectedGame.color,
-				numbers: auxCart,
-				inCart: false,
-				date: `${date.getDate()}/${
-					date.getMonth() + 1 <= 9 && 0 + (date.getMonth() + 1)
-				}/${date.getFullYear()}`,
+				numbers: auxCart.toString(),
 			},
 		});
 		setPriceCart(priceCart + selectedGame.price);
 	};
 
 	const onDeleteHandler = (idGame: number, price: number) => {
-		dispatchCart({type: "REMOVE_GAME", payload: idGame});
+		dispatchCart({type: 'REMOVE_GAME', payload: idGame});
 		setPriceCart(priceCart - price);
 	};
 
-	const saveGameHandler = () => {
+	const saveGameHandler = async () => {
 		if (cartState.content.length === 0) {
-			setModalProps("Carrinho vazio!");
+			setModalProps('Carrinho vazio!');
 			setModal(true);
 			return;
 		}
-		if (priceCart <= 30) {
-			setModalProps("Só é possivel fazer jogos acima de R$30!");
+		if (priceCart < 30) {
+			setModalProps('Só é possivel fazer jogos a partir de R$30!');
 			setModal(true);
 			return;
 		}
-		dispatchRedux(
-			usersActions.setNewGame({
-				data: cartState.content,
-				id: currentUser.id,
-			})
-		);
-		dispatchRedux(
-			currentUserActions.setCurrentUser({
-				id: currentUser.id,
-				name: currentUser.name,
-				email: currentUser.email,
-				password: currentUser.password,
-				game: currentUser.game.concat(cartState.content),
-			})
-		);
-		setModalProps("Jogo realizado. Boa Sorte!");
-		setPriceCart(0);
-		dispatchCart({type: "CLEAR_GAME"});
+		setModalProps('loading');
 		setModal(true);
+
+		const cartContent = {
+			cart: cartState.content,
+			totalPrice: priceCart,
+		};
+
+		console.log(cartContent);
+		try {
+			await api.post('games/bet', cartContent, {
+				headers: {
+					Authorization: token,
+				},
+			});
+			setModalProps('Jogo realizado. Boa Sorte!');
+			setPriceCart(0);
+			dispatchCart({type: 'CLEAR_GAME'});
+			setModal(true);
+		} catch (err) {
+			setModalProps('Erro ao fazer a bet!');
+			setModal(true);
+		}
 	};
 
-	const onCloseModal = () => {
+	const getColor = (id: number): string => {
+		const index = gameData.findIndex((item: any) => {
+			return item.id === id;
+		});
+
+		return gameData[index].color;
+	};
+
+	const getType = (id: number): string => {
+		const index = gameData.findIndex((item: any) => {
+			return item.id === id;
+		});
+
+		return gameData[index].type;
+	};
+
+	const onCloseModalHandler = () => {
 		setModal(false);
 	};
 
 	return (
 		<Fragment>
-			{modal && (
-				<Modal onClose={onCloseModal}>
-					<p>{modalProps}</p>
-					<button onClick={onCloseModal}>OK</button>
-				</Modal>
-			)}
+			{modal &&
+				(modalProps === 'loading' ? (
+					<Modal onClose={onCloseModalHandler}>
+						<img src={loading} alt="loading..." />
+					</Modal>
+				) : (
+					<Modal onClose={onCloseModalHandler}>
+						<p>{modalProps}</p>
+						<button onClick={onCloseModalHandler}>OK</button>
+					</Modal>
+				))}
 			<Header
 				isActiveButton={true}
-				text='Home'
+				text="Home"
 				onClick={onClickHeaderHandler}
 			/>
 			<Container>
@@ -248,7 +283,7 @@ const Game: React.FunctionComponent<IRoute> = () => {
 										setSelectedButton(item)
 									}
 								>
-									{item.type.replace(/[-]/g, "")}
+									{item.type.replace(/[-]/g, '')}
 								</ButtonSelect>
 							</ItemListButtons>
 						))}
@@ -261,7 +296,7 @@ const Game: React.FunctionComponent<IRoute> = () => {
 						{listNumbers.map((item: INumbers) => (
 							<NumberLabel isSelected={item.selected}>
 								<NumberInput
-									type='checkbox'
+									type="checkbox"
 									onClick={() =>
 										markNumberHandler(item)
 									}
@@ -300,11 +335,11 @@ const Game: React.FunctionComponent<IRoute> = () => {
 									index: number
 								) => (
 									<GameMade
-										type={item.type}
-										color={item.color}
+										game_id={item.game_id}
+										type={getType(item.game_id)}
+										color={getColor(item.game_id)}
 										price={item.price}
 										numbers={item.numbers}
-										inCart={true}
 										onDelete={() => {
 											onDeleteHandler(
 												index,
@@ -322,7 +357,7 @@ const Game: React.FunctionComponent<IRoute> = () => {
 								{priceCart
 									.toFixed(2)
 									.toString()
-									.replace(/[.]/, ",")}
+									.replace(/[.]/, ',')}
 							</p>
 						</PriceCart>
 						<ButtonSave onClick={saveGameHandler}>

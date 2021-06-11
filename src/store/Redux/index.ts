@@ -1,16 +1,16 @@
-import {configureStore} from "@reduxjs/toolkit";
+import {configureStore} from '@reduxjs/toolkit';
 
-import loginReducer from "./login";
-import gameReducer from "./game";
-import usersReducer from "./users";
-import currentUserReducer from "./currentUser";
+import loginReducer from './login';
+import gameReducer from './game';
+import currentUserReducer from './currentUser';
+import tokenReducer from './token';
 
 const store = configureStore({
 	reducer: {
 		login: loginReducer,
 		game: gameReducer,
-		users: usersReducer,
 		currentUser: currentUserReducer,
+		token: tokenReducer,
 	},
 });
 

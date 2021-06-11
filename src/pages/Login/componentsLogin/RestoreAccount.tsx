@@ -2,15 +2,15 @@ import React, {useState, useEffect, useMemo, useCallback} from 'react';
 
 import ButtonActions from '../../../components/ButtonActions';
 import Modal from '../../../components/Modal';
-import {useAppDispatch} from '../../../hooks/hooks';
+import {useAppDispatch, useAppSelector} from '../../../hooks/hooks';
 import {loginActions} from '../../../store/Redux/login';
 import {Container, Title, BoxForm, Input} from '../styles';
 import IButton from '../../../interfaces/button';
+import loading from '../../../assets/loading.gif';
 import api from '../../../services/api/index';
 
-interface IUserRegister {
-	name: string;
-	email: string;
+interface IRestorePassword {
+	token: string;
 	password: string;
 	password_confirmation: string;
 }
@@ -22,50 +22,28 @@ const propsButton: IButton = {
 	widthButton: '22rem',
 };
 
-const RegisterAccount: React.FC = () => {
+const RestoreAccount: React.FC = () => {
 	const dispatch = useAppDispatch();
+	const token = useAppSelector((state) => state.token.token);
 
-	const [email, setEmail] = useState<string>('');
-	const [name, setName] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 	const [passwordConfirm, setPasswordConfirm] = useState<string>('');
 	const [modal, setModal] = useState<boolean>(false);
 	const [modalProps, setModalProps] = useState<string>('');
-	const [nameError, setNameError] = useState<boolean>(false);
-	const [emailError, setEmailError] = useState<boolean>(false);
 	const [passwordError, setPasswordError] = useState<boolean>(false);
 	const [passwordConfirmError, setPasswordConfirmError] =
 		useState<boolean>(false);
 
-	const regexName = useMemo(() => /^([a-zA-Z0-9]{2,})/, []);
-	const regexEmail = useMemo(
-		() => /^[a-z0-9._]+@[a-z0-9]+\.[a-z]+\.?([a-z]+)?$/i,
-		[]
-	);
 	const regexPassword = useMemo(() => /^([a-zA-Z0-9]{8,})$/, []);
 
 	useEffect(() => {
-		name.match(regexName) || name.length === 0
-			? setNameError(false)
-			: setNameError(true);
-		email.match(regexEmail) || email.length === 0
-			? setEmailError(false)
-			: setEmailError(true);
 		password.match(regexPassword) || password.length === 0
 			? setPasswordError(false)
 			: setPasswordError(true);
 		passwordConfirm === password || passwordConfirm.length === 0
 			? setPasswordConfirmError(false)
 			: setPasswordConfirmError(true);
-	}, [
-		name,
-		email,
-		password,
-		passwordConfirm,
-		regexEmail,
-		regexName,
-		regexPassword,
-	]);
+	}, [password, passwordConfirm, regexPassword]);
 
 	const backHandler = (event: React.SyntheticEvent): void => {
 		event.preventDefault();
@@ -76,48 +54,31 @@ const RegisterAccount: React.FC = () => {
 	const submitHandler = async (event: React.SyntheticEvent) => {
 		event.preventDefault();
 
-		if (
-			!email.match(regexEmail) ||
-			!password.match(regexPassword) ||
-			!name.match(regexName) ||
-			passwordConfirm !== password
-		) {
+		setModalProps('loading');
+		setModal(true);
+
+		if (!password.match(regexPassword) || passwordConfirm !== password) {
 			setModalProps('Insira dados válidos!');
 			setModal(true);
 			return;
 		}
 
 		try {
-			var user: IUserRegister = {
-				name: name,
-				email: email,
+			var newPassword: IRestorePassword = {
+				token: token,
 				password: password,
 				password_confirmation: passwordConfirm,
 			};
 
-			await api.post('users', user);
+			await api.put('password', newPassword);
 
-			setModalProps('Usuário cadastrado com sucesso!');
+			setModalProps('Nova senha definida!');
 			setModal(true);
 		} catch (err) {
-			setModalProps('O usuário já existe!');
+			setModalProps('Email não cadstrado!');
 			setModal(true);
 		}
 	};
-
-	const nameInputHandler = useCallback(
-		(event: React.FormEvent<HTMLInputElement>) => {
-			setName(event.currentTarget.value);
-		},
-		[]
-	);
-
-	const emailInputHandler = useCallback(
-		(event: React.FormEvent<HTMLInputElement>) => {
-			setEmail(event.currentTarget.value);
-		},
-		[]
-	);
 
 	const passwordInputHandler = useCallback(
 		(event: React.FormEvent<HTMLInputElement>) => {
@@ -135,34 +96,26 @@ const RegisterAccount: React.FC = () => {
 
 	const onCloseModalHandler = () => {
 		setModal(false);
-		modalProps === 'Usuário cadastrado com sucesso!' &&
+		(modalProps === 'Usuário cadastrado com sucesso!' ||
+			modalProps === 'Nova senha definida!') &&
 			dispatch(loginActions.setLogin());
 	};
 
 	return (
 		<Container>
-			{modal && (
-				<Modal onClose={onCloseModalHandler}>
-					<p>{modalProps}</p>
-					<button onClick={onCloseModalHandler}>OK</button>
-				</Modal>
-			)}
-			<Title>Registration</Title>
+			{modal &&
+				(modalProps === 'loading' ? (
+					<Modal onClose={onCloseModalHandler}>
+						<img src={loading} alt="loading..." />
+					</Modal>
+				) : (
+					<Modal onClose={onCloseModalHandler}>
+						<p>{modalProps}</p>
+						<button onClick={onCloseModalHandler}>OK</button>
+					</Modal>
+				))}
+			<Title>Restore password</Title>
 			<BoxForm>
-				<Input
-					placeholder="Name"
-					value={name}
-					onChange={nameInputHandler}
-					type="text"
-					isError={nameError}
-				/>
-				<Input
-					placeholder="Email"
-					value={email}
-					onChange={emailInputHandler}
-					type="email"
-					isError={emailError}
-				/>
 				<Input
 					placeholder="Password"
 					value={password}
@@ -186,7 +139,7 @@ const RegisterAccount: React.FC = () => {
 					side={false}
 					onClick={submitHandler}
 				>
-					Register
+					Save Password
 				</ButtonActions>
 			</BoxForm>
 			<ButtonActions
@@ -203,4 +156,4 @@ const RegisterAccount: React.FC = () => {
 	);
 };
 
-export default RegisterAccount;
+export default RestoreAccount;

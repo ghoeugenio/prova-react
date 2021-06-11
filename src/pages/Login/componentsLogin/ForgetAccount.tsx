@@ -1,31 +1,29 @@
-import React, {useState, useCallback} from "react";
+import React, {useState, useCallback} from 'react';
 
-import ButtonActions from "../../../components/ButtonActions";
-import Modal from "../../../components/Modal";
-import {useAppDispatch, useAppSelector} from "../../../hooks/hooks";
-import {loginActions} from "../../../store/Redux/login";
-import IButton from "../../../interfaces/button";
-import IUserRegister from "../../../interfaces/users";
+import ButtonActions from '../../../components/ButtonActions';
+import Modal from '../../../components/Modal';
+import {useAppDispatch} from '../../../hooks/hooks';
+import {loginActions} from '../../../store/Redux/login';
+import IButton from '../../../interfaces/button';
+import loading from '../../../assets/loading.gif';
+import api from '../../../services/api';
 
-import {Container, Title, BoxForm, Input} from "../styles";
+import {Container, Title, BoxForm, Input} from '../styles';
 
 const propsButton: IButton = {
-	iconSize: "1.5rem",
-	fontSize: "2rem",
-	fontColor: "#707070",
-	widthButton: "22rem",
+	iconSize: '1.5rem',
+	fontSize: '2rem',
+	fontColor: '#707070',
+	widthButton: '22rem',
 };
 
 const ForgetAccount: React.FC = () => {
 	const [modal, setModal] = useState<boolean>(false);
-	const [modalProps, setModalProps] = useState<string>("");
-	const [email, setEmail] = useState<string>("");
+	const [modalProps, setModalProps] = useState<string>('');
+	const [email, setEmail] = useState<string>('');
 
 	const regexEmail = /^[a-z0-9._]+@[a-z0-9]+\.[a-z]+\.?([a-z]+)?$/i;
 
-	const users: Array<IUserRegister> = useAppSelector(
-		(state) => state.users.users
-	);
 	const dispatch = useAppDispatch();
 
 	const backHandler = (event: React.SyntheticEvent): void => {
@@ -41,25 +39,29 @@ const ForgetAccount: React.FC = () => {
 		[]
 	);
 
-	const sendLinkHandler = (event: React.SyntheticEvent) => {
+	const sendLinkHandler = async (event: React.SyntheticEvent) => {
 		event.preventDefault();
 
+		setModalProps('loading');
+		setModal(true);
+
 		if (!email.match(regexEmail)) {
-			setModalProps("Insira dados válidos!");
+			setModalProps('Insira dados válidos!');
 			setModal(true);
 			return;
 		}
 
-		var flag: boolean = false;
-		users.forEach((item) => {
-			if (item.email === email) {
-				setModalProps(`Sua senha é: ${item.password}`);
-				setModal(true);
-				flag = true;
-			}
-		});
-		if (!flag) {
-			setModalProps(`Usuário não existe`);
+		try {
+			await api.post('password', {
+				email: email,
+				redirect_url: 'http://localhost:3000/redirect',
+			});
+			setModalProps(
+				`Um email foi enviado para ${email}, verifique também a caixa de spam!`
+			);
+			setModal(true);
+		} catch {
+			setModalProps('Erro ao recuperar senha!');
 			setModal(true);
 		}
 	};
@@ -70,22 +72,27 @@ const ForgetAccount: React.FC = () => {
 
 	return (
 		<Container>
-			{modal && (
-				<Modal onClose={onCloseModalHandler}>
-					<p>{modalProps}</p>
-					<button onClick={onCloseModalHandler}>OK</button>
-				</Modal>
-			)}
+			{modal &&
+				(modalProps === 'loading' ? (
+					<Modal onClose={onCloseModalHandler}>
+						<img src={loading} alt="loading..." />
+					</Modal>
+				) : (
+					<Modal onClose={onCloseModalHandler}>
+						<p>{modalProps}</p>
+						<button onClick={onCloseModalHandler}>OK</button>
+					</Modal>
+				))}
 			<Title>Reset password</Title>
 			<BoxForm>
 				<Input
-					placeholder='Email'
+					placeholder="Email"
 					value={email}
 					onChange={emailInputHandler}
-					type='email'
+					type="email"
 				/>
 				<ButtonActions
-					type='submit'
+					type="submit"
 					iconSize={propsButton.iconSize}
 					fontSize={propsButton.fontSize}
 					fontColor={propsButton.fontColor}

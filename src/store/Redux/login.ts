@@ -1,19 +1,22 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice} from '@reduxjs/toolkit';
 
-const initialLogin = {loginScreen: "login"};
+const initialLogin = {loginScreen: 'login'};
 
 const loginSlice = createSlice({
-	name: "login",
+	name: 'login',
 	initialState: initialLogin,
 	reducers: {
 		setLogin(state) {
-			state.loginScreen = "login";
+			state.loginScreen = 'login';
 		},
 		setRegister(state) {
-			state.loginScreen = "register";
+			state.loginScreen = 'register';
 		},
 		setForget(state) {
-			state.loginScreen = "forget";
+			state.loginScreen = 'forget';
+		},
+		setRestore(state) {
+			state.loginScreen = 'restore';
 		},
 	},
 });

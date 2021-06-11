@@ -1,7 +1,7 @@
-import {createSlice} from "@reduxjs/toolkit";
-//arquivo json - configuracoes de jogo
+import {createSlice} from '@reduxjs/toolkit';
+
 const gameSlice = createSlice({
-	name: "game",
+	name: 'game',
 	initialState: {game: []},
 	reducers: {
 		setGame(state, action) {

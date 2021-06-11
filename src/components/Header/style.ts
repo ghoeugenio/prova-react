@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import {East} from "@styled-icons/material";
+import styled from 'styled-components';
+import {East} from '@styled-icons/material';
 
 export const Container = styled.header`
 	height: 4.3rem;
@@ -84,18 +84,4 @@ export const IconRightHeader = styled(East)`
 	width: 1.25rem;
 	height: 1.25rem;
 	margin-left: 0.2rem;
-`;
-
-export const EmptyGames = styled.div`
-	width: 20rem;
-	font-size: 1rem;
-	color: black;
-
-	border: none;
-	background-color: transparent;
-	cursor: default;
-`;
-
-export const AccountEdit = styled.div`
-	display: flex;
 `;

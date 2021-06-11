@@ -1,5 +1,5 @@
-import React from "react";
-import ISelectNumbers from "../../interfaces/selectNumbers";
+import React from 'react';
+import ISelectNumbers from '../../interfaces/selectNumbers';
 import {
 	Container,
 	ButtonDelete,
@@ -10,7 +10,7 @@ import {
 	Price,
 	Type,
 	DatePrice,
-} from "./style";
+} from './style';
 
 const GameMade: React.FunctionComponent<ISelectNumbers> = ({
 	type,
@@ -18,45 +18,48 @@ const GameMade: React.FunctionComponent<ISelectNumbers> = ({
 	color,
 	numbers,
 	onDelete,
-	inCart,
 	date,
 }) => {
+	const url = window.location.pathname;
+
+	const onCart: boolean = url === '/bet' && true;
+
 	return (
 		<Container>
-			{inCart && (
+			{onCart && (
 				<ButtonDelete onClick={onDelete}>
 					<IconTrash />
 				</ButtonDelete>
 			)}
 			<CartProps color={color}>
 				<Numbers>
-					<p>{numbers.join(", ")}</p>
+					<p>{numbers.replace(/[,]/g, ', ')}</p>
 				</Numbers>
-				{!inCart && (
+				{!onCart && (
 					<DatePrice>
 						<Type color={color}>
 							{date}
-							{" - "}
+							{' - '}
 						</Type>
-						<Price color={color} inCart={inCart}>
-							{"- "}
-							R$:{" "}
+						<Price color={color} onCart={onCart}>
+							{'- '}
+							R$:{' '}
 							{price
 								.toFixed(2)
 								.toString()
-								.replace(/[.]/, ",")}
+								.replace(/[.]/, ',')}
 						</Price>
 					</DatePrice>
 				)}
 				<PriceType>
 					<Type color={color}>{type}</Type>
-					{inCart && (
-						<Price color={color} inCart={inCart}>
-							R$:{" "}
+					{onCart && (
+						<Price color={color} onCart={onCart}>
+							R$:{' '}
 							{price
 								.toFixed(2)
 								.toString()
-								.replace(/[.]/, ",")}
+								.replace(/[.]/, ',')}
 						</Price>
 					)}
 				</PriceType>

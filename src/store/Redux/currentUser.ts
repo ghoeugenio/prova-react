@@ -1,16 +1,16 @@
-import {createSlice} from "@reduxjs/toolkit";
-import IUserRegister from "../../interfaces/users";
+import {createSlice} from '@reduxjs/toolkit';
+import IUser from '../../interfaces/users';
 
 interface CurrentUser {
-	currentUser: IUserRegister;
+	currentUser: IUser;
 }
 
 const initialCurrentUserState: CurrentUser = {
-	currentUser: {id: 0, name: "", password: "", email: "", game: []},
+	currentUser: {id: 0, name: '', email: ''},
 };
 
 const currentUserSlice = createSlice({
-	name: "currentUser",
+	name: 'currentUser',
 	initialState: initialCurrentUserState,
 	reducers: {
 		setCurrentUser(state, action) {

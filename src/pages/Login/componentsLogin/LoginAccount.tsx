@@ -1,30 +1,28 @@
-import React, {useState, useCallback} from "react";
-import {useHistory} from "react-router-dom";
-import ButtonActions from "../../../components/ButtonActions";
-import Modal from "../../../components/Modal";
-import {useAppDispatch, useAppSelector} from "../../../hooks/hooks";
-import {loginActions} from "../../../store/Redux/login";
-import {currentUserActions} from "../../../store/Redux/currentUser";
-import {Container, Title, BoxForm, Input, ForgotButton} from "../styles";
-import IButton from "../../../interfaces/button";
-import IUserRegister from "../../../interfaces/users";
+import React, {useState, useCallback} from 'react';
+import {useHistory} from 'react-router-dom';
+import ButtonActions from '../../../components/ButtonActions';
+import Modal from '../../../components/Modal';
+import {useAppDispatch} from '../../../hooks/hooks';
+import {loginActions} from '../../../store/Redux/login';
+import {currentUserActions} from '../../../store/Redux/currentUser';
+import {Container, Title, BoxForm, Input, ForgotButton} from '../styles';
+import IButton from '../../../interfaces/button';
+import IUser from '../../../interfaces/users';
+import api from '../../../services/api';
 
 const propsButton: IButton = {
-	iconSize: "1.5rem",
-	fontSize: "2rem",
-	fontColor: "#707070",
-	widthButton: "22rem",
+	iconSize: '1.5rem',
+	fontSize: '2rem',
+	fontColor: '#707070',
+	widthButton: '22rem',
 };
 
 const LoginAccount: React.FC = () => {
 	const dispatch = useAppDispatch();
-	const users: Array<IUserRegister> = useAppSelector(
-		(state) => state.users.users
-	);
 
-	const [email, setEmail] = useState<string>("");
-	const [password, setPassword] = useState<string>("");
-	const [modalProps, setModalProps] = useState<string>("");
+	const [email, setEmail] = useState<string>('');
+	const [password, setPassword] = useState<string>('');
+	const [modalProps, setModalProps] = useState<string>('');
 	const [modal, setModal] = useState<boolean>(false);
 
 	const history = useHistory();
@@ -41,25 +39,35 @@ const LoginAccount: React.FC = () => {
 		dispatch(loginActions.setRegister());
 	};
 
-	const submitHandler = (event: React.SyntheticEvent): void => {
+	const submitHandler = async (event: React.SyntheticEvent) => {
 		event.preventDefault();
 		if (!email.match(regexEmail) || !password.match(regexPassword)) {
-			setModalProps("Insira dados válidos!");
+			setModalProps('Insira dados válidos!');
 			setModal(true);
 			return;
 		}
-		users.forEach((item: IUserRegister) => {
-			if (item.email === email) {
-				if (item.password === password) {
-					localStorage.setItem("token", "4UTH3NT1C4T3D");
-					console.log(item);
-					dispatch(currentUserActions.setCurrentUser(item));
-					history.push("/home");
-				}
-			}
-		});
-		setModalProps("Usuário ou senha incorretos");
-		setModal(true);
+		try {
+			await api
+				.post('sessions', {email: email, password: password})
+				.then((response) => {
+					localStorage.setItem(
+						'token',
+						response.data.token.token
+					);
+					const currentUser: IUser = {
+						id: response.data.user.id,
+						name: response.data.user.name,
+						email: response.data.user.email,
+					};
+					dispatch(
+						currentUserActions.setCurrentUser(currentUser)
+					);
+					history.push('/home');
+				});
+		} catch (err) {
+			setModalProps('Usuário ou senha incorretos!');
+			setModal(true);
+		}
 	};
 
 	const emailInputHandler = useCallback(
@@ -91,22 +99,22 @@ const LoginAccount: React.FC = () => {
 			<Title>Authentication</Title>
 			<BoxForm>
 				<Input
-					type='email'
-					placeholder='Email'
+					type="email"
+					placeholder="Email"
 					value={email}
 					onChange={emailInputHandler}
 				/>
 				<Input
-					type='password'
-					placeholder='Password'
+					type="password"
+					placeholder="Password"
 					value={password}
 					onChange={passwordInputHandler}
 				/>
-				<ForgotButton type='button' onClick={forgetHandler}>
+				<ForgotButton type="button" onClick={forgetHandler}>
 					I forgot my password
 				</ForgotButton>
 				<ButtonActions
-					type='submit'
+					type="submit"
 					iconSize={propsButton.iconSize}
 					fontSize={propsButton.fontSize}
 					fontColor={propsButton.fontColor}
@@ -121,7 +129,7 @@ const LoginAccount: React.FC = () => {
 				iconSize={propsButton.iconSize}
 				fontSize={propsButton.fontSize}
 				fontColor={propsButton.fontColor}
-				widthButton={"22rem"}
+				widthButton={'22rem'}
 				side={false}
 				onClick={registerHandler}
 			>

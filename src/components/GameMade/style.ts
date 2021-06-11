@@ -1,8 +1,12 @@
-import styled from "styled-components";
-import ISelectNumbers from "../../interfaces/selectNumbers";
-import {Trash} from "@styled-icons/bootstrap";
+import styled from 'styled-components';
+import {Trash} from '@styled-icons/bootstrap';
 
-export const Container = styled.div<ISelectNumbers>`
+interface Istyled {
+	onCart: boolean;
+	color: string;
+}
+
+export const Container = styled.div`
 	display: flex;
 	padding-bottom: 2rem;
 `;
@@ -26,8 +30,8 @@ export const IconTrash = styled(Trash)`
 	color: #888888;
 `;
 
-export const CartProps = styled.div<ISelectNumbers>`
-	border-left: 5px solid ${(props: ISelectNumbers) => props.color};
+export const CartProps = styled.div<Istyled>`
+	border-left: 5px solid ${(props: Istyled) => props.color};
 	border-radius: 0.2rem;
 	width: 80%;
 
@@ -52,17 +56,15 @@ export const PriceType = styled.div`
 	margin-left: 0.7rem;
 `;
 
-export const Price = styled.p<ISelectNumbers>`
-	margin-left: ${(props: ISelectNumbers) => props.inCart && "0.5rem"};
-	font-family: ${(props: ISelectNumbers) =>
-		props.inCart && "Roboto Regular"};
-	color: ${(props: ISelectNumbers) =>
-		props.inCart ? "#868686" : props.color};
+export const Price = styled.p<Istyled>`
+	margin-left: ${(props: Istyled) => props.onCart && '0.5rem'};
+	font-family: ${(props: Istyled) => props.onCart && 'Roboto Regular'};
+	color: ${(props: Istyled) => (props.onCart ? '#868686' : props.color)};
 	opacity: 1;
 `;
 
-export const Type = styled.p<ISelectNumbers>`
-	color: ${(props: ISelectNumbers) => props.color};
+export const Type = styled.p<Istyled>`
+	color: ${(props: Istyled) => props.color};
 	padding-bottom: 2rem;
 `;
 
@@ -73,6 +75,6 @@ export const DatePrice = styled.div`
 	p {
 		color: #868686;
 		font: 1rem;
-		font-family: "Roboto Regular";
+		font-family: 'Roboto Regular';
 	}
 `;

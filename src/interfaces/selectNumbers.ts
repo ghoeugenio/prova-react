@@ -1,9 +1,9 @@
 export default interface ISelectNumbers {
-	type: string;
+	game_id: number;
+	type?: string;
 	price: number;
-	color: string;
-	date?: string;
-	numbers: Array<string>;
+	color?: string;
+	date?: Date | string | number;
+	numbers: string;
 	onDelete?: Function | void;
-	inCart: boolean;
 }

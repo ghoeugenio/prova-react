@@ -1,8 +1,5 @@
-import ISelectNumbers from "./selectNumbers";
-export default interface IUserRegister {
+export default interface IUser {
 	id: number;
 	name: string | undefined;
 	email: string | undefined;
-	password: string | undefined;
-	game: Array<ISelectNumbers>;
 }

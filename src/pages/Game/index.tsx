@@ -32,7 +32,6 @@ import IData from '../../interfaces/data';
 import ISelectNumbers from '../../interfaces/selectNumbers';
 import IUser from '../../interfaces/users';
 import {useAppSelector, useAppDispatch} from '../../hooks/hooks';
-import {gameActions} from '../../store/Redux/game';
 import cartReducer from '../../store/Reducer/cartReducer';
 import api from '../../services/api';
 import loading from '../../assets/loading.gif';
@@ -77,23 +76,6 @@ const Game: React.FunctionComponent<IRoute> = () => {
 		setListNumbers(array);
 		setMarkNumbers(0);
 	}, [selectedGame]);
-
-	useEffect(() => {
-		!localStorage.getItem('token') && history.push('/');
-		if (currentUser.id === 0) {
-			history.push('/');
-			localStorage.clear();
-		}
-		if (gameData.length < 1) {
-			api.get('/game')
-				.then((response) => {
-					dispatchGame(gameActions.setGame(response.data));
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-		}
-	}, [history, token, currentUser, gameData, dispatchGame]);
 
 	const onClickHeaderHandler = () => {
 		history.push('/home');

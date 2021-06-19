@@ -70,14 +70,6 @@ const User: React.FunctionComponent = () => {
 		);
 	}, [dispatchUser, token, modal]);
 
-	useEffect(() => {
-		!localStorage.getItem('token') && history.push('/');
-		if (currentUser.id === 0) {
-			history.push('/');
-			localStorage.clear();
-		}
-	}, [history, token, currentUser]);
-
 	const changeNameHandler = async (event: React.SyntheticEvent) => {
 		event.preventDefault();
 		if (!name.match(regexName)) {

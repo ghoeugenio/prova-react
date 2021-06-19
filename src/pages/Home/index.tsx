@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import {useAppSelector, useAppDispatch} from '../../hooks/hooks';
+import {useAppSelector} from '../../hooks/hooks';
 import api from '../../services/api';
-import {gameActions} from '../../store/Redux/game';
 import {
 	Container,
 	Drawer,
@@ -44,7 +43,6 @@ interface IBets {
 const Home: React.FunctionComponent<IRoute> = () => {
 	const history = useHistory();
 	const gameData: any = useAppSelector((state) => state.game.game);
-	const dispatchGame = useAppDispatch();
 	const currentUser = useAppSelector(
 		(state) => state.currentUser.currentUser
 	);
@@ -53,30 +51,17 @@ const Home: React.FunctionComponent<IRoute> = () => {
 	const [recentBets, setRecentBets] = useState<Array<IBets>>();
 
 	useEffect(() => {
-		!localStorage.getItem('token') && history.push('/');
-		if (currentUser.id === 0) {
-			history.push('/');
-			localStorage.clear();
+		try {
+			api.get('games/bet/all', {
+				headers: {
+					Authorization: token,
+				},
+			}).then((response) => {
+				setRecentBets(response.data);
+			});
+		} catch (err) {
+			return;
 		}
-		if (gameData.length < 1) {
-			api.get('/game')
-				.then((response) => {
-					dispatchGame(gameActions.setGame(response.data));
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-		}
-	}, [history, token, currentUser, gameData, dispatchGame]);
-
-	useEffect(() => {
-		api.get('games/bet/all', {
-			headers: {
-				Authorization: token,
-			},
-		}).then((response) => {
-			setRecentBets(response.data);
-		});
 	}, [selectedGame, currentUser, token]);
 
 	const newBetHandler = (event: React.SyntheticEvent) => {
@@ -145,24 +130,29 @@ const Home: React.FunctionComponent<IRoute> = () => {
 					</ButtonActions>
 				</BlockDrawer>
 			</Drawer>
-			<BlockRecentGames>
-				{recentBets?.length === 0 && (
-					<EmptyList>No found Bets of this type.</EmptyList>
-				)}
-				{recentBets?.map(
-					(item) =>
-						item.game_id === selectedGame.id && (
-							<GameMade
-								game_id={item.game_id}
-								type={getType(item.game_id)}
-								color={getColor(item.game_id)}
-								price={item.price}
-								numbers={item.numbers}
-								date={formateDate(item.created_at)}
-							/>
-						)
-				)}
-			</BlockRecentGames>
+			{selectedGame ? (
+				<BlockRecentGames>
+					{recentBets?.length === 0 ||
+						(!recentBets && (
+							<EmptyList>
+								No found Bets of this type.
+							</EmptyList>
+						))}
+					{recentBets?.map(
+						(item) =>
+							item.game_id === selectedGame.id && (
+								<GameMade
+									game_id={item.game_id}
+									type={getType(item.game_id)}
+									color={getColor(item.game_id)}
+									price={item.price}
+									numbers={item.numbers}
+									date={formateDate(item.created_at)}
+								/>
+							)
+					)}
+				</BlockRecentGames>
+			) : null}
 		</Container>
 	);
 };

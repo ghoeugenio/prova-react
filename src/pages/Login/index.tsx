@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import {useAppSelector, useAppDispatch} from '../../hooks/hooks';
-import {gameActions} from '../../store/Redux/game';
-import api from '../../services/api';
+import {fetchGames} from '../../store/Redux/game';
 import {
 	ContainerMain,
 	Main,
@@ -22,13 +21,7 @@ const Login: React.FunctionComponent<IRoute> = () => {
 	const dispatchGame = useAppDispatch();
 
 	useEffect(() => {
-		api.get('/game')
-			.then((response) => {
-				dispatchGame(gameActions.setGame(response.data));
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+		dispatchGame(fetchGames());
 	}, [dispatchGame]);
 
 	return (
